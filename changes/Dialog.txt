@@ -1,0 +1,120 @@
+import * as React from 'react';
+import { TextBoxComponent, NumericTextBoxComponent } from '@syncfusion/ej2-react-inputs';
+import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
+import { DataUtil } from '@syncfusion/ej2-data';
+import data from './db.json';
+import DataService from './DataService.js';
+import DataCheck from './DataCheck.js';
+import * as ReactDOM from 'react-dom';
+export class app extends React.Component<{}, {}>{
+    //DialogFormTemplate: React.FC = (props: any) => {
+    d: any[] = DataCheck.states()
+    repNameDataOnly: any = DataUtil.distinct(data, 'name', true);
+    // const repRegionDataOnly: any = DataUtil.distinct(d, 'statename', true);
+    repAreaDataOnly: any = DataUtil.distinct(data, 'representativeArea', true);
+    cusPincodeOnly: any = DataUtil.distinct(data, 'customerPincode', true);
+    //  sportsData: any[] = ['Badminton', 'Cricket', 'Football', 'Golf', 'Tennis'];
+    // console.log(repNameDataOnly)
+    // state DropDownList instance
+    private stateObj: any;
+
+    // region DropDownList instance
+    private regionObj: any;
+
+    // pincode DropDownList instance
+    private pincodeObj: any;
+    constructor(props: Readonly<{}>) {
+        super(props)
+        this.state = { states: any, regions: any, pincodes: any };
+    }
+    componentDidMount() {
+        DataService.getAllStates().then((response) => {
+            console.log("response===", response.data);
+            this.setState({ states: response.data });
+        })
+            .catch(err => { throw err });
+    }
+    // maps the state column to fields property
+    private stateField: object = { value: 'StateId', text: 'StateName' };
+
+    // maps the region column to fields property
+    private regionField: object = { value: 'RegionId', text: 'RegionName' };
+
+    // maps the pincode column to fields property
+    private pincodeField: object = { text: 'PincodeName', value: 'PincodeId' };
+    public onStateChange() {
+        // query the data source based on state DropDownList selected value
+        this.regionObj.query = DataService.getAllRegions(this.stateObj.value).then((response) => {
+            console.log("response===", response.data);
+            this.setState({ states: response.data });
+        })
+            .catch(err => { throw err });;
+        // enable the region DropDownList
+        this.regionObj.enabled = true;
+        // clear the existing selection.
+        this.regionObj.text = null;
+        // bind the property changes to region DropDownList
+        this.regionObj.dataBind();
+        // clear the existing selection in pincode DropDownList
+        this.pincodeObj.text = null;
+        // disable the pincode DropDownList
+        this.pincodeObj.enabled = false;
+        // bind the property change to pincode DropDownList
+        this.pincodeObj.dataBind();
+    }
+    public onRegionChange() {
+        // query the data source based on state DropDownList selected value
+        this.pincodeObj.query = DataService.getAllRegions(this.regionObj.value).then((response) => {
+            console.log("response===", response.data);
+            this.setState({ states: response.data });
+        })
+        // enable the city DropDownList
+        this.pincodeObj.enabled = true;
+        // clear the existing selection
+        this.pincodeObj.text = null;
+        // bind the property change to city DropDownList
+        this.pincodeObj.dataBind();
+    }
+    render() {
+        return (
+            <div className="form-row">
+                <div className="form-group col-md-6">
+                    <TextBoxComponent id="id" value={props.id}
+                        placeholder="id" floatLabelType="Auto" />
+                </div>
+                <div className="form-group col-md-6">
+                    <DropDownListComponent id="name" value={props.representativeName}
+                        dataSource={repNameDataOnly} fields={{ text: 'name', value: 'name' }}
+                        placeholder="name" floatLabelType="Auto" />
+                </div>
+                <div className="form-group col-md-6">
+                    <DropDownListComponent id="state-ddl" ref={(scope) => { this.stateObj = scope; }} fields={this.stateField} dataSource={this.states} placeholder='Select a state' change={this.onStateChange = this.onStateChange.bind(this)} />
+                </div>
+                <div className="form-group col-md-6">
+                    {/* specifies the tag for render the region DropDownList component */}
+                    <DropDownListComponent id="region-ddl" ref={(scope) => { this.regionObj = scope; }} enabled={false} fields={this.regionField} dataSource={this.regions} placeholder='Select a region' change={this.onRegionChange = this.onRegionChange.bind(this)} />
+                </div>
+                <div className="form-group col-md-6">
+                    {/* specifies the tag for render the pincode DropDownList component */}
+                    <DropDownListComponent id="pincode-ddl" ref={(scope) => { this.pincodeObj = scope; }} enabled={false} fields={this.pincodeField} dataSource={this.pincodes} placeholder='Select a pincode' />
+                </div>
+
+                {/* <DropDownListComponent id="representativeRegion" value={props.representativeRegion}
+                        dataSource={d} fields={{ text: 'representativeRegion', value: 'representativeRegion' }}
+                        placeholder="representativeRegion" floatLabelType="Auto" />
+                
+               
+                    <DropDownListComponent id="representativeArea" value={props.representativeArea}
+                        dataSource={repAreaDataOnly} fields={{ text: 'representativeArea', value: 'representativeArea' }}
+                        placeholder="representativeArea" floatLabelType="Auto" />
+               
+                
+                    <DropDownListComponent id="customerPincode" value={props.customerPincode}
+                        dataSource={cusPincodeOnly} fields={{ text: 'customerPincode', value: 'customerPincode' }}
+                        placeholder="customerPincode" floatLabelType="Auto" /> */}
+
+            </div>
+
+        );
+    }
+}

@@ -1,0 +1,235 @@
+const express = require('express');
+const { raw } = require('express');
+const cors = require('cors');
+const app = express();
+// const _ = require("under");
+const sampledata =
+{
+    "repdata": [
+        {
+            "id": "1",
+            "name": "Nikhil Garakapati",
+            "username": "Nikhil",
+            "email": "nikhil@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Chittor",
+            "representativeArea": "Chittor",
+            "customerName": "VasaviMeds",
+            "customerPincode": "4343434",
+            "customerPhone": "11111111",
+            "phone": "1212121212"
+        },
+        {
+            "id": "2",
+            "name": "Nikhil Garakapati",
+            "username": "Nikhil",
+            "email": "nikhil@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Chittor",
+            "representativeArea": "Chittor",
+            "customerName": "MegaMeds",
+            "customerPincode": "4343434",
+            "customerPhone": "22222222",
+            "phone": "1212121212"
+        },
+        {
+            "id": "3",
+            "name": "Nikhil Garakapati",
+            "username": "Nikhil",
+            "email": "nikhil@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Chittor",
+            "representativeArea": "Tirupati",
+            "customerName": "SuperMeds",
+            "customerPincode": "12121212",
+            "customerPhone": "3333333",
+            "phone": "1212121212"
+        },
+        {
+            "id": "4",
+            "name": "Rajesh Kumar",
+            "username": "Rajesh",
+            "email": "rajesh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Anantapur",
+            "representativeArea": "Anantapur",
+            "customerName": "South Elvis Meds",
+            "customerPincode": "76767676",
+            "customerPhone": "44444444",
+            "phone": "2323232"
+        },
+        {
+            "id": "5",
+            "name": "Rajesh Kumar",
+            "username": "Rajesh",
+            "email": "rajesh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Anantapur",
+            "representativeArea": "Dharmavaram",
+            "customerName": "Balaji Meds",
+            "customerPincode": "354355",
+            "customerPhone": "55555555",
+            "phone": "2323232"
+        },
+        {
+            "id": "6",
+            "name": "Suresh Singh",
+            "username": "Suresh",
+            "email": "suresh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Kurnool",
+            "representativeArea": "Kurnool",
+            "customerName": "South Christy Meds",
+            "customerPincode": "533434",
+            "customerPhone": "6666666",
+            "phone": "8723473737"
+        },
+        {
+            "id": "7",
+            "name": "Suresh Singh",
+            "username": "Suresh",
+            "email": "suresh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Kurnool",
+            "representativeArea": "Atamakur",
+            "customerName": "Homewealth Meds",
+            "customerPincode": "5454544",
+            "customerPhone": "77777777",
+            "phone": "8723473737"
+        },
+        {
+            "id": "8",
+            "name": "Suresh Singh",
+            "username": "Suresh",
+            "email": "suresh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Kurnool",
+            "representativeArea": "Kurnool",
+            "customerName": "VijayaMeds",
+            "customerPincode": "533434",
+            "customerPhone": "8888888",
+            "phone": "8723473737"
+        },
+        {
+            "id": "9",
+            "name": "Suresh Singh",
+            "username": "Suresh",
+            "email": "suresh@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Kurnool",
+            "representativeArea": "Kurnool",
+            "customerName": "Supriya Meds",
+            "customerPincode": "533434",
+            "customerPhone": "9999999",
+            "phone": "8723473737"
+        },
+        {
+            "id": "10",
+            "name": "Aman Kumar",
+            "username": "Aman",
+            "email": "aman@gmail.com",
+            "representativeRegion": "ANDHRA PRADESH",
+            "representativeHq": "Warangal",
+            "representativeArea": "Warangal Town",
+            "customerName": "StaySafe Meds",
+            "customerPincode": "827482",
+            "customerPhone": "99529072323",
+            "phone": "8723473737"
+        }
+    ],
+    "statedata": [
+        {
+            "id": "1",
+            "statename": "Andhra Pradesh",
+        },
+        {
+            "id": "2",
+            "statename": "Tamil Nadu",
+        }
+    ],
+    "regiondata": [
+        {
+            "id": "1",
+            "regionname": "Guntur",
+            "stateid": "1"
+        },
+        {
+            "id": "2",
+            "regionname": "Kadiri",
+            "stateid": "1"
+        },
+        {
+            "id": "3",
+            "regionname": "Chennai",
+            "stateid": "2"
+        }
+    ],
+    "pincodedata": [
+        {
+            "id": "1",
+            "pincodename": 522201,
+            "regionid": "1"
+        },
+        {
+            "id": "1",
+            "pincodename": 555591,
+            "regionid": "2"
+        },
+        {
+            "id": "1",
+            "pincodename": 600019,
+            "regionid": "3"
+        }
+
+    ]
+}
+
+// var whitelist = ['http://localhost:5000/repdata','http://localhost:5000']
+// var corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
+
+// // Then pass them to cors:
+// app.use(cors(corsOptions));
+
+
+
+app.get('/repdata', function (req, res, next) {
+    res.send(sampledata['repdata']);
+})
+app.get('/statedata', function (req, res) {
+    var statedata = sampledata['statedata']
+    var data = [];
+    for (x of statedata) {
+        data.push(x.statename)
+    }
+    res.send(statedata);
+})
+app.get('/regiondata/:stid', function (req, res) {
+    var stid = req.params.stid
+    var regiondata = sampledata['regiondata']
+    var filteredregion = regiondata.filter(r => r.stateid === stid)
+    var data = [];
+    for (x of filteredregion) {
+        data.push(x.regionname)
+    }
+    res.send(regiondata);
+})
+app.get('/pincodedata/:rgid', function (req, res) {
+    var rgid = req.params.rgid
+    var pincodedata = sampledata['pincodedata'];
+    var filteredpincode = pincodedata.filter(p => p.regionid === rgid)
+    var data = [];
+    for (x of filteredpincode) {
+        data.push(x.pincodename)
+    }
+    res.send(pincodedata);
+})
+const port = process.env.PORT || 5000;
+const server = app.listen(port, () => console.log(`Listening to port ${port}`));
